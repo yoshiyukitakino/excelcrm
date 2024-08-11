@@ -2,7 +2,8 @@
  * 顧客追加API.
  */
 import { NextRequest, NextResponse } from 'next/server';
-import { getBook, getSheet, saveBook, myWorkbook, myExcelMessage } from "@/app/utils/myExceljs";
+import { getBook, getSheet, saveBook, myWorkbook, myExcelMessage } from "@/app/utils/myExcelJs";
+import { clientColumnsMap } from '@/app/api/client/clientColumnsMap';
 
 interface Item {
     message: string;
@@ -19,14 +20,25 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (worksheet === undefined) {
             return NextResponse.json<Item>({ message: myExcelMessage });
         }
+        let row = 1;
+        for (; row < 2000; row++) {
+            const col = clientColumnsMap.id.col;
+            if (worksheet.getCell(row, col).value === null) {
+                break;
+            }
+        }
         //文字を入れる（行・列指定）
-        worksheet.getCell(1, 1).value = "商品";
-        worksheet.getCell(2, 1).value = "りんご";
-        worksheet.getCell(3, 1).value = "みかん";
-        worksheet.getCell(4, 1).value = "ぶどう";
+        worksheet.getCell(row, clientColumnsMap["id"].col).value = row;
+
+        // clientColumnsMapの内容をコンソールに出力
+        Object.entries(clientColumnsMap).forEach(([key, value]) => {
+            // console.log(`Key: ${key}, Value:`, value);
+            //    Key: firstName, Value: { name: 'firstName', col: 2 }
+            worksheet.getCell(row, value.col).value = reqBody[key];
+        });
         await saveBook();
 
-        console.log("#test2-end");
+        console.log("###### CREATED ######");
         return NextResponse.json<Item>({ message: 'Create Item' });
     } catch (err) {
         console.log(err);

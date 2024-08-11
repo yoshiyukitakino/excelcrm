@@ -3,7 +3,7 @@
  */
 import { Client } from '@/app/type/clientType';
 import { NextRequest, NextResponse } from 'next/server'
-import { getBook, getSheet, saveBook, myWorkbook, myExcelMessage } from "@/app/utils/myExceljs";
+import { getBook, getSheet, saveBook, myWorkbook, myExcelMessage } from "@/app/utils/myExcelJs";
 
 export async function POST(request: NextRequest, response: NextResponse) {
     await new Promise((resolve) => setTimeout(resolve, 3000));
