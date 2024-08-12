@@ -10,9 +10,9 @@ interface Item {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-    console.log("###### CREATE ######");
+    console.log("###### CREATE API ######");
     const reqBody = await request.json();
-    console.log(reqBody);
+    // console.log(reqBody);
 
     try {
         await getBook();
@@ -21,7 +21,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             return NextResponse.json<Item>({ message: myExcelMessage });
         }
         let row = 1;
-        for (; row < 2000; row++) {
+        const maxRows: number = parseInt(process.env.EXCEL_CLIENT_MAX_ROWS as string);
+        for (; row < maxRows; row++) {
             const col = clientColumnsMap.id.col;
             if (worksheet.getCell(row, col).value === null) {
                 break;
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         });
         await saveBook();
 
-        console.log("###### CREATED ######");
+        console.log("###### CREATED SUCCESS ######");
         return NextResponse.json<Item>({ message: 'Create Item' });
     } catch (err) {
         console.log(err);

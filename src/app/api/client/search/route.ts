@@ -6,9 +6,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getBook, getSheet, saveBook, myWorkbook, myExcelMessage } from "@/app/utils/myExcelJs";
 
 export async function POST(request: NextRequest, response: NextResponse) {
+
+    console.log("###### SEARCH API ######");
     await new Promise((resolve) => setTimeout(resolve, 3000));
     const reqBody = await request.json();
-    console.log("###### SEARCH ######");
     console.log(reqBody);
 
     const clientList: Client[] = [];
