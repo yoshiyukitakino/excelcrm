@@ -10,10 +10,10 @@ interface Item {
     message: string;
 }
 
-export async function PUT(request: NextRequest, context: any): Promise<NextResponse> {
+export async function PUT(request: NextRequest, context: any) {
     console.log("###### UPDATE API ######");
+
     const reqBody = await request.json();
-    // console.log(reqBody);
 
     try {
         await getBook();
@@ -22,21 +22,25 @@ export async function PUT(request: NextRequest, context: any): Promise<NextRespo
             return NextResponse.json<Item>({ message: myExcelMessage });
         }
         let row = 1;
+        let proc = "";
         const maxRows: number = parseInt(process.env.EXCEL_CLIENT_MAX_ROWS as string);
         for (; row < maxRows; row++) {
             const col = clientColumnsMap.id.col;
-            if (worksheet.getCell(row, col).value == reqBody.id) {
+            const id = worksheet.getCell(row, col).value;
+            if (!id) {
+                proc = "CREATE";
+                break;
+            } else if (id == reqBody.id) {
+                proc = "UPDATE";
                 break;
             }
         }
-        if (reqBody.process === 'CREATE') {
+        if (proc === "CREATE") {
             //文字を入れる（行・列指定）
             worksheet.getCell(row, clientColumnsMap["id"].col).value = row;
 
-        } else {
-            if (row === maxRows) {
-                return NextResponse.json({ message: 'NG NOT FOUND', client: {} }, { status: 202 })
-            }
+        } else if (!proc) {
+            return NextResponse.json({ message: 'NG NOT FOUND', client: {} }, { status: 202 })
         }
 
         // clientColumnsMapの内容をコンソールに出力
@@ -49,7 +53,7 @@ export async function PUT(request: NextRequest, context: any): Promise<NextRespo
         });
         await saveBook();
 
-        console.log("###### UPDATED SUCCESS ######");
+        console.log(`###### ${proc} SUCCESS ######`);
 
         // clientColumnsMapの内容をコンソールに出力
         const client = {};
@@ -58,8 +62,6 @@ export async function PUT(request: NextRequest, context: any): Promise<NextRespo
             //    Key: firstName, Value: { name: 'firstName', col: 2 }
             client[key] = worksheet.getCell(row, value.col).value;
         });
-        console.log("complete readone");
-        // console.log(JSON.stringify(client));
         return NextResponse.json({ message: 'OK', client: client })
     } catch (err) {
         console.log(err);

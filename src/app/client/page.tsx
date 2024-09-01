@@ -19,7 +19,7 @@ const ReadClientList = () => {
   });
   const [isSearch, setIsSearch] = useState(false);
   const [image, setImage] = useState("");
-  const loginUserEmail = useAuth();
+  //  const loginUserEmail = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.name;
@@ -38,7 +38,6 @@ const ReadClientList = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log("###検索0###");
     try {
       console.log("###検索###");
       const response = await fetch(`${READALL_API_URL}`, {
@@ -54,7 +53,6 @@ const ReadClientList = () => {
           phonNo: searchCondition.phoneNo
         })
       });
-      console.log("###検索２###");
       const jsonData = await response.json();
       alert(jsonData.message);
 
@@ -62,7 +60,7 @@ const ReadClientList = () => {
         setClientList(jsonData.clientList)
       }
     } catch (error) {
-      alert("商品取得失敗" + error);
+      alert("顧客取得失敗" + error);
     }
   }
 
@@ -71,14 +69,16 @@ const ReadClientList = () => {
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
 
       <form onSubmit={handleSubmit}>
-        <input type="text" name="name" value={searchCondition.name} onChange={handleChange} placeholder="名前" required />
+        <input type="text" name="name" value={searchCondition.name} onChange={handleChange} placeholder="名前" />
         <br />
-        <input type="text" name="email" value={searchCondition.email} onChange={handleChange} placeholder="メール" required />
+        <input type="text" name="email" value={searchCondition.email} onChange={handleChange} placeholder="メール" />
         <br />
-        <input type="text" name="phoneNo" value={searchCondition.phoneNo} onChange={handleChange} placeholder="電話番号" required />
+        <input type="text" name="phoneNo" value={searchCondition.phoneNo} onChange={handleChange} placeholder="電話番号" />
         <br />
         <button className="bg-blue-600 py-2 px-3 rounded-lg text-white hover:bg-blue-700 transion">
           検索</button>
+        <a href={`/client/update`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">追加</a>
+
       </form>
 
 
@@ -126,24 +126,33 @@ const ReadClientList = () => {
                     <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                     <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
                   </div>
-                </td><th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                </td>
+                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                   {client.id}
-                </th><td className="px-6 py-4">
+                </th>
+                <td className="px-6 py-4">
                   {client.lastName}{client.firstName}
-                </td><td className="px-6 py-4">
+                </td>
+                <td className="px-6 py-4">
                   カナ
-                </td><td className="px-6 py-4">
+                </td>
+                <td className="px-6 py-4">
                   {client.email1}
-                </td><td className="px-6 py-4">
+                </td>
+                <td className="px-6 py-4">
                   {client.email2}
-                </td><td className="px-6 py-4">
+                </td>
+                <td className="px-6 py-4">
                   {client.mobPhone}
-                </td><td className="px-6 py-4">
+                </td>
+                <td className="px-6 py-4">
                   {client.fixedPhone}
-                </td><td className="px-6 py-4">
+                </td>
+                <td className="px-6 py-4">
                   {client.pref}{client.city}{client.address1}{client.address2}
-                </td><td className="flex items-center px-6 py-4">
-                  <a href={`/client/readOne/${client.id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                </td>
+                <td className="flex items-center px-6 py-4">
+                  <a href={`/client/update/${client.id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">更新</a>
                 </td>
               </tr>
             )

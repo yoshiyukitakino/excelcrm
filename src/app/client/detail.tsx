@@ -1,4 +1,7 @@
-export const CreateDetail = (props) => (
+import { Button } from "@/app/components/Button";
+import { InputAll } from "@/app/components/InputAll";
+
+export const CreateDetail = ({ formAction, client }) => (
 
     <div>
 
@@ -9,65 +12,37 @@ export const CreateDetail = (props) => (
 
                     <p className="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">message.</p>
                 </div>
-                <form action={props.formAction} className="mx-auto grid max-w-screen-md gap-4 sm:grid-cols-2">
-
-                    <div>
-                        <label htmlFor="lastame" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">姓*</label>
-                        <input name="lastName" defaultValue={props?.client.lastName} className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring" />
+                <form action={formAction} className="mx-auto grid max-w-screen-md gap-4 sm:grid-cols-4">
+                    {/*
+                    <div className="sm:col-span-4">
+                        <label htmlFor="id" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">ID*</label>
+                        <input name="id" defaultValue={client?.id} className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring" />
+                    </div>
+*/}
+                    <InputAll label="ID" name="id" defaultValue={client?.id} readOnly />
+                    <div className="sm:col-span-3">
+                    </div>
+                    <InputAll label="姓" name="lastName" defaultValue={client?.lastName} required colSpan={"sm:col-span-2"} />
+                    <InputAll label="名" name="firstName" defaultValue={client?.firstName} required colSpan={"sm:col-span-2"} />
+                    <InputAll label="メール1" name="email1" defaultValue={client?.email1} required colSpan={"sm:col-span-4"} />
+                    <InputAll label="メール2" name="email2" defaultValue={client?.email2} colSpan={"sm:col-span-4"} />
+                    <InputAll label="携帯電話" name="mobPhone" defaultValue={client?.mobPhone} colSpan={"sm:col-span-2"} />
+                    <InputAll label="固定電話" name="fixedPhone" defaultValue={client?.fixedPhone} colSpan={"sm:col-span-2"} />
+                    <InputAll label="都道府県" name="pref" defaultValue={client?.pref} colSpan={"sm:col-span-2"} />
+                    <InputAll label="市区町村" name="city" defaultValue={client?.city} colSpan={"sm:col-span-2"} />
+                    <InputAll label="住所" name="address1" defaultValue={client?.address1} colSpan={"sm:col-span-4"} />
+                    <InputAll label="ビル・マンション" name="address2" defaultValue={client?.address2} colSpan={"sm:col-span-4"} />
+                    <InputAll label="生年月日" name="birthday" defaultValue={client?.birthday} />
+                    <div className="sm:col-span-3">
                     </div>
 
-                    <div>
-                        <label htmlFor="firstName" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">名*</label>
-                        <input name="firstName" defaultValue={props?.client.fistName} className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring" />
-                    </div>
-
-                    <div className="sm:col-span-2">
-                        <label htmlFor="email1" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">メール1*</label>
-                        <input name="email1" defaultValue={props?.client.email1} className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring" />
-                    </div>
-
-                    <div className="sm:col-span-2">
-                        <label htmlFor="email2" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">メール2</label>
-                        <input name="email2" defaultValue={props?.client.email2} className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring" />
-                    </div>
-
-                    <div className="sm:col-span-2">
-                        <label htmlFor="mobPhone" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">携帯電話*</label>
-                        <input name="mobPhone" defaultValue={props?.client.mobPhone} className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring" />
-                    </div>
-                    <div className="sm:col-span-2">
-                        <label htmlFor="fixedPhone" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">固定電話</label>
-                        <input name="fixedPhone" defaultValue={props?.client.fixedPhone} className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring" />
-                    </div>
-                    <div className="sm:col-span-2">
-                        <label htmlFor="pref" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">都道府県</label>
-                        <input name="pref" defaultValue={props?.client.pref} className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring" />
-                    </div>
-                    <div className="sm:col-span-2">
-                        <label htmlFor="city" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">市区町村</label>
-                        <input name="city" defaultValue={props?.client.city} className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring" />
-                    </div>
-                    <div className="sm:col-span-2">
-                        <label htmlFor="address1" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">住所</label>
-                        <input name="address1" defaultValue={props?.client.address1} className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring" />
-                    </div>
-                    <div className="sm:col-span-2">
-                        <label htmlFor="address2" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">ビル・マンション等</label>
-                        <input name="address2" defaultValue={props?.client.address2} className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring" />
-                    </div>
-                    <div className="sm:col-span-2">
-                        <label htmlFor="birthday" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">生年月日</label>
-                        <input name="birthday" defaultValue={props?.client.birthday} className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring" />
-                    </div>
-
-                    <div className="sm:col-span-2">
+                    <div className="sm:col-span-4">
                         <label htmlFor="notes" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">そのた</label>
                         <textarea name="notes" className="h-64 w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring"></textarea>
                     </div>
 
                     <div className="flex items-center justify-between sm:col-span-2">
-                        <button className="inline-block rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition duration-100 hover:bg-indigo-600 focus-visible:ring active:bg-indigo-700 md:text-base">{props.process}</button>
-
+                        <Button variant={client ? "update" : "create"}>{client ? "UPDATE" : "CREATE"}</Button>
                         <span className="text-sm text-gray-500">*Required</span>
                     </div>
 

@@ -8,10 +8,9 @@ import { clientColumnsMap } from '@/app/api/client/clientColumnsMap';
 
 export async function GET(request: NextRequest, context: any) {
 
-    console.log("###### READONE API ######");
     try {
         const id = context.params.id;
-        console.log(`id:${id}`)
+        console.log(`###### READONE API ###### id:${id}`)
 
         await getBook();
         const worksheet = await getSheet("Client");
@@ -39,7 +38,7 @@ export async function GET(request: NextRequest, context: any) {
             client[key] = worksheet.getCell(row, value.col).value;
         });
         console.log("complete readone");
-        // console.log(JSON.stringify(client));
+        //console.log(JSON.stringify(client));
         return NextResponse.json({ message: 'OK', client: client })
     } catch (e) {
         console.error(e);
