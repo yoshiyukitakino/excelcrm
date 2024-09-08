@@ -1,8 +1,8 @@
 import { Button } from "@/app/components/Button";
 import { InputAll } from "@/app/components/InputAll";
-import { ClientColumns } from "@/app/api/client/clientColumnsMap";
+import { ClientColumns } from "@/app/api/client/clientColumnsObj";
 
-export const CreateDetail = ({ formAction, client, clientColumnsMap }) => (
+export const CreateDetail = ({ formAction, client, clientColumnsObj }) => (
 
     <div>
         <div className="bg-white py-6 sm:py-8 lg:py-12">
@@ -21,7 +21,7 @@ export const CreateDetail = ({ formAction, client, clientColumnsMap }) => (
 */}
 
                     {
-                        Object.entries(clientColumnsMap).map(([key, value]) => {
+                        Object.entries(clientColumnsObj).map(([key, value]) => {
                             const column = value as ClientColumns;  // 型アサーションを使用
                             return (
                                 <>

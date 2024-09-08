@@ -56,13 +56,10 @@ const InputAll = ({
             <label htmlFor={name} className="mb-2 inline-block text-sm text-gray-800 sm:text-base">{label}{required ? "*" : ""}</label>
 
             {inputType === 'textarea' ?
-                <textarea name={name}
-                    className={cn(inputVariants({ variant, customSize, className }))} >
-                    {defaultValue}
-                </textarea>
-
+                <textarea name={name} key={name} defaultValue={defaultValue}
+                    className={cn(inputVariants({ variant, customSize, className }))} />
                 :
-                <input type={inputType} name={name} defaultValue={defaultValue} required={required} readOnly={readonly}
+                <input type={inputType} name={name} key={name} defaultValue={defaultValue} required={required} readOnly={readonly}
                     className={cn(inputVariants({ variant, customSize, className }))} />
             }
 

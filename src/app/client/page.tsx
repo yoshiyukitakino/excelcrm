@@ -8,10 +8,12 @@ import Link from "next/link";
 import { Client } from "@/app/type/clientType";
 import useAuth from "@/app/utils/useAuth";
 
+const READ_FORMAT_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/clientFormat/readall/SEARCH`;
 const READALL_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/client/search`;
 const ReadClientList = () => {
 
   const [clientList, setClientList] = useState([]);
+  const [clientColumnsObj, setClientColumnsObj] = useState([]);
   const [searchCondition, setSearchCondityon] = useState({
     name: "",
     email: "",
@@ -40,6 +42,14 @@ const ReadClientList = () => {
 
     try {
       console.log("###検索###");
+
+      await (async () => {
+        // サーバーサイドでデータをフェッチ
+        const response = await fetch(`${READ_FORMAT_API_URL}`, { cache: "no-store" });
+        const jsonData = await response.json();
+        console.log(clientColumnsObj);
+        setClientColumnsObj(jsonData.clientColumnsObj)
+      })();
       const response = await fetch(`${READALL_API_URL}`, {
         method: "POST",
         headers: {
@@ -63,7 +73,6 @@ const ReadClientList = () => {
       alert("顧客取得失敗" + error);
     }
   }
-
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -91,6 +100,15 @@ const ReadClientList = () => {
                 <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
               </div>
             </th>
+
+            {
+              Object.entries(clientColumnsObj).map(([key, value]) => {
+                const column = value as ClientColumns;  // 型アサーションを使用
+                return (
+                  <p >{column.name}</p>
+                );
+              })
+            }
             <th scope="col" className="px-6 py-3">
               id
             </th>

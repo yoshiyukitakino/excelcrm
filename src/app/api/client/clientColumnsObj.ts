@@ -15,7 +15,7 @@ export type ClientColumns = {
     filSpan?: number;   // 入力画面の項目の後ろのスペース
 }
 /*
-export const clientColumnsMap: { [key: string]: ClientColumns } = {
+export const clientColumnsObj: { [key: string]: ClientColumns } = {
     id: { name: "id", title: "id", col: 1, inputType: "text", readonly: true },
     lastName: { name: "lastName", title: "姓", col: 2, inputType: "text", required: true },
     firstName: { name: "firstName", title: "名", col: 3, inputType: "text", required: true },

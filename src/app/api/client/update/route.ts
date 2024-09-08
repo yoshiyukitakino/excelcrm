@@ -3,7 +3,7 @@
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { getBook, getSheet, saveBook, myWorkbook, myExcelMessage } from "@/app/utils/myExcelJs";
-import { getClientFormat } from '../../clientFormat/readall/route';
+import { getClientFormat } from '../../clientFormat/readall/[screenType]/route';
 
 interface Item {
     message: string;
@@ -12,9 +12,8 @@ interface Item {
 export async function PUT(request: NextRequest, context: any) {
 
     try {
-        console.log("###### UPDATE API ######");
-        const clientColumnsMap = await getClientFormat();
-        console.log(`###### UPDATE API ######${clientColumnsMap.id.col}`);
+        console.log("#(API) CLIENT UPDATE");
+        const clientColumnsObj = await getClientFormat("INPUT");
         const reqBody = await request.json();
 
         await getBook();
@@ -26,7 +25,7 @@ export async function PUT(request: NextRequest, context: any) {
         let proc = "";
         const maxRows: number = parseInt(process.env.EXCEL_CLIENT_MAX_ROWS as string);
         for (; row < maxRows; row++) {
-            const col = clientColumnsMap.id.col;
+            const col = clientColumnsObj.id.col;
             const id = worksheet.getCell(row, col).value;
             if (!id) {
                 proc = "CREATE";
@@ -38,14 +37,14 @@ export async function PUT(request: NextRequest, context: any) {
         }
         if (proc === "CREATE") {
             //文字を入れる（行・列指定）
-            worksheet.getCell(row, clientColumnsMap["id"].col).value = row;
+            worksheet.getCell(row, clientColumnsObj["id"].col).value = row;
 
         } else if (!proc) {
             return NextResponse.json({ message: 'NG NOT FOUND', client: {} }, { status: 202 })
         }
 
-        // clientColumnsMapの内容をコンソールに出力
-        Object.entries(clientColumnsMap).forEach(([key, value]) => {
+        // clientColumnsObjの内容をコンソールに出力
+        Object.entries(clientColumnsObj).forEach(([key, value]) => {
             //console.log(`Key: ${key}, Value:`, value);
             //    Key: firstName, Value: { name: 'firstName', col: 2 }
             if (key !== "id") {
@@ -54,18 +53,18 @@ export async function PUT(request: NextRequest, context: any) {
         });
         await saveBook();
 
-        console.log(`###### ${proc} SUCCESS ######`);
-
-        // clientColumnsMapの内容をコンソールに出力
+        // clientColumnsObjの内容をコンソールに出力
         const client = {};
-        Object.entries(clientColumnsMap).forEach(([key, value]) => {
+        Object.entries(clientColumnsObj).forEach(([key, value]) => {
             // console.log(`Key: ${key}, Value:`, value);
             //    Key: firstName, Value: { name: 'firstName', col: 2 }
             client[key] = worksheet.getCell(row, value.col).value;
         });
+        console.log(`#(API) CLIENT UPDATE SUCCESS ${proc}`);
         return NextResponse.json({ message: 'OK', client: client })
     } catch (err) {
         console.log(err);
+        console.log(`#(API) CLIENT UPDATE ERROR`);
         return NextResponse.json<Item>({ message: 'Fail Update Item' });
     }
 }
