@@ -4,18 +4,20 @@
 import { Client } from '@/app/type/clientType';
 import { NextRequest, NextResponse } from 'next/server'
 import { getBook, getSheet, saveBook, myWorkbook, myExcelMessage } from "@/app/utils/myExcelJs";
-import { clientColumnsMap } from '@/app/api/client/clientColumnsMap';
+import { getClientFormat } from '@/app/api/clientFormat/readall/route';
 
 export async function POST(request: NextRequest, response: NextResponse) {
 
-    console.log("###### SEARCH API ######");
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const reqBody = await request.json();
-    console.log(reqBody);
-
-    const clientList: Client[] = [];
 
     try {
+        console.log("###### SEARCH API ######");
+        const clientColumnsMap = await getClientFormat();
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const reqBody = await request.json();
+        console.log(reqBody);
+
+        const clientList: Client[] = [];
+
         await getBook();
         const worksheet = await getSheet("Client");
         if (worksheet === undefined) {
@@ -48,5 +50,3 @@ export async function POST(request: NextRequest, response: NextResponse) {
         return NextResponse.json({ message: 'NG', clientList: clientList }, { status: 202 })
     }
 }
-
-

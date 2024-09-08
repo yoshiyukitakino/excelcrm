@@ -1,10 +1,10 @@
 import { Button } from "@/app/components/Button";
 import { InputAll } from "@/app/components/InputAll";
+import { ClientColumns } from "@/app/api/client/clientColumnsMap";
 
-export const CreateDetail = ({ formAction, client }) => (
+export const CreateDetail = ({ formAction, client, clientColumnsMap }) => (
 
     <div>
-
         <div className="bg-white py-6 sm:py-8 lg:py-12">
             <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
                 <div className="mb-10 md:mb-16">
@@ -19,6 +19,32 @@ export const CreateDetail = ({ formAction, client }) => (
                         <input name="id" defaultValue={client?.id} className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring" />
                     </div>
 */}
+
+                    {
+                        Object.entries(clientColumnsMap).map(([key, value]) => {
+                            const column = value as ClientColumns;  // 型アサーションを使用
+                            return (
+                                <>
+                                    <InputAll
+                                        key={key}
+                                        inputType={column.inputType}
+                                        label={column.title}
+                                        name={column.name}
+                                        defaultValue={client ? client[column.name] : ''}
+                                        required={column?.required}  // required は boolean かと思いますので、{} を囲む
+                                        readOnly={column?.readonly}
+                                        colSpan={column.colSpan ? `sm:col-span-${column.colSpan}` : "sm:col-span-4"}
+                                    />
+                                    {column.filSpan ?
+                                        <div className={`sm:col-span-${column.filSpan}`}>
+                                        </div>
+                                        : <></>}
+                                </>
+                            );
+                        })
+                    }
+                    {/*
+
                     <InputAll label="ID" name="id" defaultValue={client?.id} readOnly />
                     <div className="sm:col-span-3">
                     </div>
@@ -40,6 +66,7 @@ export const CreateDetail = ({ formAction, client }) => (
                         <label htmlFor="notes" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">そのた</label>
                         <textarea name="notes" className="h-64 w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring"></textarea>
                     </div>
+*/}
 
                     <div className="flex items-center justify-between sm:col-span-2">
                         <Button variant={client ? "update" : "create"}>{client ? "UPDATE" : "CREATE"}</Button>

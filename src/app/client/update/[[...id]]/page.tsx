@@ -1,29 +1,28 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { CreateDetail } from '@/app/client/detail';
+import { ifClientColumnsObj } from '@/app/api/client/clientColumnsMap';
 
 /**
  * 顧客追加更新ページ.
  */
+const READ_FORMAT_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/clientFormat/readall`;
 const READONE_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/client/readone`;
 const UPDATE_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/client/update`;
 async function UpdateClientPage({ params }: { params: { id: string } }) {
     console.log("### UpdateClientPage ###");
+    // サーバーサイドでデータをフェッチ
+    const response = await fetch(`${READ_FORMAT_API_URL}`, { cache: "no-store" });
+    const jsonData = await response.json();
+    const clientColumnsMap = jsonData.clientColumnsMap;
 
     const formAction = async (formData: FormData) => {
         "use server";
-        const id = formData.get("id");
-        const firstName = formData.get("firstName");
-        const lastName = formData.get("lastName");
-        const email1 = formData.get("email1");
-        const email2 = formData.get("email2");
-        const mobPhone = formData.get("mobPhone");
-        const fixedPhone = formData.get("fixedPhone");
-        const pref = formData.get("pref");
-        const city = formData.get("city");
-        const address1 = formData.get("address1");
-        const address2 = formData.get("address2");
-        const birthday = formData.get("birthday");
+        const postData: ifClientColumnsObj = {};
+        Object.entries(clientColumnsMap).forEach(([key0, value0]) => {
+            console.log(`formAction ${key0} ${value0}`);
+            postData[key0] = formData.get(key0) as string;
+        });
         let url: string = '';
         let updateId;
         let message;
@@ -34,20 +33,7 @@ async function UpdateClientPage({ params }: { params: { id: string } }) {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    id: id,
-                    firstName: firstName,
-                    lastName: lastName,
-                    email1: email1,
-                    email2: email2,
-                    mobPhone: mobPhone,
-                    fixedPhone: fixedPhone,
-                    pref: pref,
-                    city: city,
-                    address1: address1,
-                    address2: address2,
-                    birthday: birthday
-                })
+                body: JSON.stringify(postData)
             });
             const jsonData = await response.json();
             updateId = jsonData.client.id;
@@ -80,12 +66,19 @@ async function UpdateClientPage({ params }: { params: { id: string } }) {
         client = jsonData.client;
         //console.log(client);
     }
+    /*
+    Object.entries(clientColumnsMap).forEach(([key0, value0]) => {
+        console.log(`load ${key0} ${value0}`);
+        Object.entries(value0).forEach(([key1, value1]) => {
+            console.log(`load ${key1} ${value1}`);
+        });
+    });
+    */
     return (
 
-
         <div>
-            <CreateDetail formAction={formAction} process={process} client={client} />
-        </div>
+            <CreateDetail formAction={formAction} process={process} client={client} clientColumnsMap={clientColumnsMap} />
+        </div >
     );
 }
 

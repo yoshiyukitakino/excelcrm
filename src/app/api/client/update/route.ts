@@ -3,19 +3,20 @@
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { getBook, getSheet, saveBook, myWorkbook, myExcelMessage } from "@/app/utils/myExcelJs";
-import { clientColumnsMap } from '@/app/api/client/clientColumnsMap';
-import { Client } from '@/app/type/clientType';
+import { getClientFormat } from '../../clientFormat/readall/route';
 
 interface Item {
     message: string;
 }
 
 export async function PUT(request: NextRequest, context: any) {
-    console.log("###### UPDATE API ######");
-
-    const reqBody = await request.json();
 
     try {
+        console.log("###### UPDATE API ######");
+        const clientColumnsMap = await getClientFormat();
+        console.log(`###### UPDATE API ######${clientColumnsMap.id.col}`);
+        const reqBody = await request.json();
+
         await getBook();
         const worksheet = await getSheet("Client");
         if (worksheet === undefined) {
@@ -45,7 +46,7 @@ export async function PUT(request: NextRequest, context: any) {
 
         // clientColumnsMapの内容をコンソールに出力
         Object.entries(clientColumnsMap).forEach(([key, value]) => {
-            // console.log(`Key: ${key}, Value:`, value);
+            //console.log(`Key: ${key}, Value:`, value);
             //    Key: firstName, Value: { name: 'firstName', col: 2 }
             if (key !== "id") {
                 worksheet.getCell(row, value.col).value = reqBody[key];

@@ -9,7 +9,9 @@ export interface InputAllProps
     extends InputHTMLAttributes<HTMLInputElement>,
     VariantProps<typeof inputVariants> {
     label: string;
+    inputType: string;
     colSpan?: string;
+    readonly?: boolean;
 }
 
 const inputVariants = cva(
@@ -36,7 +38,9 @@ const inputVariants = cva(
 
 const InputAll = ({
     label,
+    inputType,
     required,
+    readonly,
     name,
     defaultValue,
     className,
@@ -47,10 +51,20 @@ const InputAll = ({
 }: InputAllProps) => {
     //console.log({ ...props });
     return (
+
         <div className={colSpan} >
             <label htmlFor={name} className="mb-2 inline-block text-sm text-gray-800 sm:text-base">{label}{required ? "*" : ""}</label>
-            <input name={name} defaultValue={defaultValue}
-                className={cn(inputVariants({ variant, customSize, className }))} />
+
+            {inputType === 'textarea' ?
+                <textarea name={name}
+                    className={cn(inputVariants({ variant, customSize, className }))} >
+                    {defaultValue}
+                </textarea>
+
+                :
+                <input type={inputType} name={name} defaultValue={defaultValue} required={required} readOnly={readonly}
+                    className={cn(inputVariants({ variant, customSize, className }))} />
+            }
 
         </div>
 

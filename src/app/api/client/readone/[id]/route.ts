@@ -4,13 +4,14 @@
 import { Client } from '@/app/type/clientType';
 import { NextRequest, NextResponse } from 'next/server'
 import { getBook, getSheet, saveBook, myWorkbook, myExcelMessage } from "@/app/utils/myExcelJs";
-import { clientColumnsMap } from '@/app/api/client/clientColumnsMap';
+import { getClientFormat } from '@/app/api/clientFormat/readall/route';
 
 export async function GET(request: NextRequest, context: any) {
 
     try {
         const id = context.params.id;
         console.log(`###### READONE API ###### id:${id}`)
+        const clientColumnsMap = await getClientFormat();
 
         await getBook();
         const worksheet = await getSheet("Client");
@@ -33,8 +34,6 @@ export async function GET(request: NextRequest, context: any) {
         // clientColumnsMapの内容をコンソールに出力
         const client = {};
         Object.entries(clientColumnsMap).forEach(([key, value]) => {
-            //console.log(`Key: ${key}, Value:`, value);
-            //    Key: firstName, Value: { name: 'firstName', col: 2 }
             client[key] = worksheet.getCell(row, value.col).value;
         });
         console.log("complete readone");

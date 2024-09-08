@@ -1,4 +1,8 @@
-export type ClientColoumns = {
+export interface ifClientColumnsObj {
+    [key: string]: ClientColumns
+};
+
+export type ClientColumns = {
     name: string;
     title: string;
     col: number;
@@ -7,9 +11,11 @@ export type ClientColoumns = {
     listOrder?: number;     // 検索画面の項目表示順 not number :非表示
     required?: boolean;
     readonly?: boolean;
+    colSpan?: number;   // 入力画面の項目のサイズ
+    filSpan?: number;   // 入力画面の項目の後ろのスペース
 }
-
-export const clientColumnsMap: { [key: string]: ClientColoumns } = {
+/*
+export const clientColumnsMap: { [key: string]: ClientColumns } = {
     id: { name: "id", title: "id", col: 1, inputType: "text", readonly: true },
     lastName: { name: "lastName", title: "姓", col: 2, inputType: "text", required: true },
     firstName: { name: "firstName", title: "名", col: 3, inputType: "text", required: true },
@@ -29,3 +35,4 @@ export const clientColumnsMap: { [key: string]: ClientColoumns } = {
     hoby: { name: "hoby", title: "趣味", col: 17, inputType: "text", required: false },
 
 };
+*/
